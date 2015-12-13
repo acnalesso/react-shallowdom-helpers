@@ -20,8 +20,14 @@ react-shallowdom-helpers
   let renderedComponent = ShallowDOMHelpers.render(<MyComponent>);
   ShallowDOMHelpers.click(renderedComponent, '.toggle-modal');
 
-  renderedComponent = ShallowDOMHelpers.reRender();
+  renderedComponent = ShallowDOMHelpers.reRenderMountedInstance();
   // latest state is now set in the component
+```
+
+#### getMountedInstance
+  Return the current mounted instance. You have access to properties such as state in this object.
+```js
+  ShallowDOMHelpers.getMountedInstance();
 ```
 
 #### findByClass
@@ -90,6 +96,12 @@ react-shallowdom-helpers
 
   // by tag
   ShallowDOMHelpers.change(renderedComponent, 'p', '123');
+```
+
+#### TestUtils
+  Return React's TestUtils.
+```js
+  ShallowDOMHelpers.TestUtils;
 ```
 
 
