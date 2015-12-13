@@ -88,7 +88,7 @@ class Finders {
 
 const finders = new Finders();
 
-export default {
+module.exports = {
  TestUtils: React.addons.TestUtils,
 
  render: (component) => {
@@ -146,4 +146,3 @@ export default {
  }
 
 };
-
