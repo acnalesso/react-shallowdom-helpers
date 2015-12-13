@@ -1,10 +1,9 @@
 {
   "name": "react-shallowdom-helpers",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "A set of helpers to traverse the object returned by shallow renderer.",
   "main": "src/index.js",
   "scripts": {
-    "publish": "npm run build && npm publish ./dist",
     "build": "rm -rf ./dist && mkdir ./dist && mkdir ./dist/src && cp ./README.md ./dist && cp ./package.json ./dist && browserify -t [ babelify --presets [ es2015 ] ] ./src/index.js --standalone index > ./dist/src/index.js",
     "test": "./node_modules/.bin/mocha --require test/setup.js --compilers js:babel-core/register test/**/*.test.js"
   },
