@@ -31,15 +31,21 @@ react-shallowdom-helpers
 ```
 
 ### findAllByClass
-  It returns an array containing all the matching elements. If no element is found it an empty array is returned.
-#### findByClass
+  It returns an array containing all the matching elements. If no element is found an empty array is returned.
 ```js
   ShallowDOMHelpers.findAllByClass(renderedComponent, 'class-name');
 ```
 
+#### findByClass
   It returns the first element matching the class name.
 ```js
   ShallowDOMHelpers.findByClass(renderedComponent, 'class-name');
+```
+
+#### findAllByTag
+  It returns an array containing all the matching elements. If no element is found an empty array is returned.
+```js
+  ShallowDOMHelpers.findByTag(renderedComponent, 'p');
 ```
 
 #### findByTag

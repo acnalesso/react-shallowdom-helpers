@@ -70,6 +70,13 @@ describe('ReactShallowDomHelpers', () => {
         expect(found.props.className).to.eq('class-name')
       });
 
+      it('throws an error when an element is not found', () => {
+        const renderedComponent = ShallowDomHelpers.render(<Finders />);
+        expect(function () {
+          ShallowDomHelpers.findByClass(renderedComponent, 'not-class-name');
+        }).to.throw('Could not find element by class name: not-class-name')
+      });
+
       it('finds an element that is nested and has two class names', () => {
         const renderedComponent = ShallowDomHelpers.render(<Finders />);
         const found = ShallowDomHelpers.findByClass(renderedComponent, 'second-name');
@@ -78,6 +85,19 @@ describe('ReactShallowDomHelpers', () => {
     });
 
     describe('By tag', () => {
+      it('finds all elements by tag', () => {
+        const renderedComponent = ShallowDomHelpers.render(<Finders />);
+        const found = ShallowDomHelpers.findAllByTag(renderedComponent, 'hr');
+        expect(found.length).to.eq(2)
+      });
+
+      it('throws an error when an element is not found', () => {
+        const renderedComponent = ShallowDomHelpers.render(<Finders />);
+        expect(function () {
+          ShallowDomHelpers.findByTag(renderedComponent, 'noTag');
+        }).to.throw('Could not find element by tag name: noTag')
+      });
+
       it('finds element by tag name and element is not nested', () => {
         const renderedComponent = ShallowDomHelpers.render(<Finders />);
         const found = ShallowDomHelpers.findByTag(renderedComponent, 'div');
@@ -95,6 +115,7 @@ describe('ReactShallowDomHelpers', () => {
       it('finds by id and element is not nested', () => {
         const renderedComponent = ShallowDomHelpers.render(<Finders />);
         const found = ShallowDomHelpers.findById(renderedComponent, 'id-here');
+
         expect(found.props.id).to.eq('id-here')
       });
 

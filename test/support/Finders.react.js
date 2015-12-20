@@ -4,6 +4,7 @@ export default class Todo extends React.Component {
   render() {
     return (
       <div id="id-here" className="class-name">
+        <hr />
         <div className="first-name second-name">
           <p id="_1" className="all"></p>
           <div id="nested" className="all"></div>
@@ -25,7 +26,9 @@ export default class Todo extends React.Component {
                   <p id="_4" className="all"></p>
                   <div id="deep_down" className="all">
                     <p id="_4" className="all">
-                      <p id="_4" className="all"></p>
+                      <p id="_4" className="all">
+                        <hr />
+                      </p>
                     </p>
                   </div>
                 </p>

@@ -46,19 +46,19 @@ class Finders {
     }
 
     return result;
- };
+  };
 
   findByClass(component, className) {
     const result = this.findAllByClass(component, className, [], 0, true);
 
     if (result.length === 0) {
-      throw(`Could not find rendered element by class name: ${className}.`);
+      throw(`Could not find element by class name: ${className}`);
     } else {
       return result[0];
     }
-  }
+  };
 
-  findById(component, id, result = [], index = 0) {
+  findElementById(component, id, result = [], index = 0) {
     // Checks the parent
     if (component && component.props && component.props.id && component.props.id === id) {
       result.push(component);
@@ -73,62 +73,68 @@ class Finders {
 
       // Checks if child has any children
       if (typeof(component[index].props.children) !== 'undefined') {
-        this.findById(component[index].props.children, id, result, 0);
+        this.findElementById(component[index].props.children, id, result, 0);
       }
 
       // increments index and checks the next child, leaf.
-      this.findById(component, id, result, ++index);
+      this.findElementById(component, id, result, ++index);
     }
 
     if (component && component.props && component.props.children !== undefined) {
-      this.findById(component.props.children, id, result, 0);
+      this.findElementById(component.props.children, id, result, 0);
     }
 
     return result;
+  };
 
-    //if (index > component.length) {
-    //  throw(`Could not find rendered component with id: ${id}. Make sure you have it defined in your render method!`);
-    //}
+  findById(component, id) {
+    const result = this.findElementById(component, id, [], 0);
 
-    //if (component.props && component.props.id === id) {
-    //  return component;
-    //}
+    if (result.length === 0) {
+      throw(`Could not find element by id: ${id}`);
+    }
 
-    //if (component[index] && component[index].props && component[index].props.id === id) {
-    //  return component[index];
-    //} else {
-    //  index++;
-    //}
-
-    //if (Object.prototype.toString.call(component) === '[object Array]') {
-    //  return this.findById(component, id, index++);
-    //} else {
-    //  return this.findById(component.props.children, id, 0);
-    //}
+    return result[0];
   }
 
-  findByTag(component, tag, index = 0) {
-    if (index > component.length) {
-      throw(`Could not find rendered component with tag: ${tag}. Make sure you have it defined in your render method!`);
+  findAllByTag(component, tagName, result = [], index = 0, done = false) {
+    // Checks the parent
+    if (component && component.type && component.type === tagName) {
+      result.push(component);
+      if (done) { return result; }
     }
 
-    if (component.type === tag) {
-      return component;
+    // Checks if child has a type
+    if (component && component[index] && component[index].type) {
+      if (component[index].type === tagName) {
+        result.push(component[index]);
+        if (done) { return result[index]; }
+      }
+
+      // Checks if child has any children
+      if (component[index].props && typeof(component[index].props.children) !== 'undefined') {
+        this.findAllByTag(component[index].props.children, tagName, result, 0, done);
+      }
+
+      // increments index and checks the next child, leaf.
+      this.findAllByTag(component, tagName, result, ++index, done);
     }
 
-    if (component[index] && component[index].type && component[index].type === tag) {
-      return component[index];
-    } else {
-      index++;
+    if (component && component.props && component.props.children !== undefined) {
+      this.findAllByTag(component.props.children, tagName, result, 0, done);
     }
 
-    if (Object.prototype.toString.call(component) === '[object Array]') {
-      return this.findByTag(component, tag, index++);
-    } else {
-      return this.findByTag(component.props.children, tag, 0);
-    }
-  }
+    return result;
+ };
 
+  findByTag(component, tag) {
+    const result = this.findAllByTag(component, tag, [], 0, true);
+    if (result.length === 0) {
+      throw(`Could not find element by tag name: ${tag}.`);
+    }
+
+    return result[0];
+  };
 }
 
 const finders = new Finders();
@@ -165,17 +171,22 @@ module.exports = {
   return element.props.onChange({ target: { text: change }});
  },
 
- findAllByClass: finders.findAllByClass,
- findByClass: finders.findByClass,
- findByTag: finders.findByTag,
+ findAllByClass: (component, className) => {
+   return finders.findAllByClass(component, className);
+ },
+ findByClass: (component, className) => {
+   return finders.findByClass(component, className);
+ },
+
+ findAllByTag: (component, tagName) => {
+   return finders.findAllByTag(component, tagName);
+ },
+ findByTag: (component, tagName) => {
+   return finders.findByTag(component, tagName);
+ },
+
  findById: (component, id) => {
-   const result = finders.findById(component, id, []);
-
-   if (result.length === 0) {
-     throw(`Could not find element by id: ${id}`);
-   }
-
-   return result[0];
+   return finders.findById(component, id);
  },
 
  getTextByTag: (component, tag) => {
@@ -185,7 +196,7 @@ module.exports = {
    return getText(finders.findByClass(component, className));
  },
  getTextById: (component, id) => {
-   return getText(finders.findById(component, id)[0]);
+   return getText(finders.findById(component, id));
  },
 
  getInnerChildren: function (component, index = 0) {
