@@ -98,10 +98,17 @@ describe('ReactShallowDomHelpers', () => {
         expect(found.props.id).to.eq('id-here')
       });
 
-      it('finds by id and element is nested', () => {
+      it('throws an error when element is found found by id', () => {
         const renderedComponent = ShallowDomHelpers.render(<Finders />);
-        const found = ShallowDomHelpers.findById(renderedComponent, 'nested');
-        expect(found.props.id).to.eq('nested')
+        expect(function () {
+          ShallowDomHelpers.findById(renderedComponent, 'no_id_here');
+        }).to.throw('Could not find element by id: no_id_here')
+      });
+
+      it('finds by id and element is deep down in the tree', () => {
+        const renderedComponent = ShallowDomHelpers.render(<Finders />);
+        const found = ShallowDomHelpers.findById(renderedComponent, 'deep_down');
+        expect(found.props.id).to.eq('deep_down')
       });
     });
   });

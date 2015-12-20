@@ -19,7 +19,6 @@ const getText = (component) => {
 
 class Finders {
   findAllByClass(component, className, result = [], index = 0, done = false) {
-
     // Checks the parent
     if (component && component.props && component.props.className && component.props.className.indexOf(className) > -1) {
       result.push(component);
@@ -59,26 +58,53 @@ class Finders {
     }
   }
 
-  findById(component, id, index = 0) {
-    if (index > component.length) {
-      throw(`Could not find rendered component with id: ${id}. Make sure you have it defined in your render method!`);
+  findById(component, id, result = [], index = 0) {
+    // Checks the parent
+    if (component && component.props && component.props.id && component.props.id === id) {
+      result.push(component);
     }
 
-    if (component.props && component.props.id === id) {
-      return component;
+    // Checks if child has any props
+    if (component && component[index] && component[index].props) {
+      if (component[index].props.id && component[index].props.id === id) {
+        result.push(component[index]);
+      }
+
+
+      // Checks if child has any children
+      if (typeof(component[index].props.children) !== 'undefined') {
+        this.findById(component[index].props.children, id, result, 0);
+      }
+
+      // increments index and checks the next child, leaf.
+      this.findById(component, id, result, ++index);
     }
 
-    if (component[index] && component[index].props && component[index].props.id === id) {
-      return component[index];
-    } else {
-      index++;
+    if (component && component.props && component.props.children !== undefined) {
+      this.findById(component.props.children, id, result, 0);
     }
 
-    if (Object.prototype.toString.call(component) === '[object Array]') {
-      return this.findById(component, id, index++);
-    } else {
-      return this.findById(component.props.children, id, 0);
-    }
+    return result;
+
+    //if (index > component.length) {
+    //  throw(`Could not find rendered component with id: ${id}. Make sure you have it defined in your render method!`);
+    //}
+
+    //if (component.props && component.props.id === id) {
+    //  return component;
+    //}
+
+    //if (component[index] && component[index].props && component[index].props.id === id) {
+    //  return component[index];
+    //} else {
+    //  index++;
+    //}
+
+    //if (Object.prototype.toString.call(component) === '[object Array]') {
+    //  return this.findById(component, id, index++);
+    //} else {
+    //  return this.findById(component.props.children, id, 0);
+    //}
   }
 
   findByTag(component, tag, index = 0) {
@@ -142,7 +168,15 @@ module.exports = {
  findAllByClass: finders.findAllByClass,
  findByClass: finders.findByClass,
  findByTag: finders.findByTag,
- findById: finders.findById,
+ findById: (component, id) => {
+   const result = finders.findById(component, id, []);
+
+   if (result.length === 0) {
+     throw(`Could not find element by id: ${id}`);
+   }
+
+   return result[0];
+ },
 
  getTextByTag: (component, tag) => {
    return getText(finders.findByTag(component, tag));
@@ -151,7 +185,7 @@ module.exports = {
    return getText(finders.findByClass(component, className));
  },
  getTextById: (component, id) => {
-   return getText(finders.findById(component, id));
+   return getText(finders.findById(component, id)[0]);
  },
 
  getInnerChildren: function (component, index = 0) {
