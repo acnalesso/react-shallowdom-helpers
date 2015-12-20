@@ -30,7 +30,13 @@ react-shallowdom-helpers
   ShallowDOMHelpers.getMountedInstance();
 ```
 
+### findAllByClass
+  It returns an array containing all the matching elements. If no element is found it an empty array is returned.
 #### findByClass
+```js
+  ShallowDOMHelpers.findAllByClass(renderedComponent, 'class-name');
+```
+
   It returns the first element matching the class name.
 ```js
   ShallowDOMHelpers.findByClass(renderedComponent, 'class-name');

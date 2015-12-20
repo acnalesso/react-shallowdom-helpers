@@ -50,7 +50,21 @@ describe('ReactShallowDomHelpers', () => {
 
   describe('Finder', () => {
     describe('By class', () => {
-      it('finds element with a single class name', () => {
+      it('finds all', () => {
+        const renderedComponent = ShallowDomHelpers.render(<Finders />);
+
+        const found = ShallowDomHelpers.findAllByClass(renderedComponent, 'all');
+        expect(found.length).to.eq(22);
+      });
+
+      it('returns an empty array when find all finds nothing', () => {
+        const renderedComponent = ShallowDomHelpers.render(<Finders />);
+
+        const found = ShallowDomHelpers.findAllByClass(renderedComponent, 'nothing');
+        expect(found.length).to.eq(0);
+      });
+
+      it('finds one element by class name', () => {
         const renderedComponent = ShallowDomHelpers.render(<Finders />);
         const found = ShallowDomHelpers.findByClass(renderedComponent, 'class-name');
         expect(found.props.className).to.eq('class-name')

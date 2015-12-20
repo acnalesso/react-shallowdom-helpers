@@ -18,25 +18,44 @@ const getText = (component) => {
 };
 
 class Finders {
-  findByClass(component, className, index = 0) {
-    if (index > component.length) {
-      throw(`Could not find rendered component with class: ${className}. Make sure you have it defined in your render method!`);
+  findAllByClass(component, className, result = [], index = 0, done = false) {
+
+    // Checks the parent
+    if (component && component.props && component.props.className && component.props.className.indexOf(className) > -1) {
+      result.push(component);
+      if (done) { return result; }
     }
 
-    if (component.props && component.props.className && component.props.className.indexOf(className) > -1) {
-      return component;
+    // Checks if child has any props
+    if (component && component[index] && component[index].props) {
+      if (component[index].props.className && component[index].props.className.indexOf(className) > -1) {
+        result.push(component[index]);
+        if (done) { return result[index]; }
+      }
+
+      // Checks if child has any children
+      if (typeof(component[index].props.children) !== 'undefined') {
+        this.findAllByClass(component[index].props.children, className, result, 0, done);
+      }
+
+      // increments index and checks the next child, leaf.
+      this.findAllByClass(component, className, result, ++index, done);
     }
 
-    if (component[index] && component[index].props && component[index].props.className && component[index].props.className.indexOf(className) > -1) {
-      return component[index];
+    if (component && component.props && component.props.children !== undefined) {
+      this.findAllByClass(component.props.children, className, result, 0, done);
+    }
+
+    return result;
+ };
+
+  findByClass(component, className) {
+    const result = this.findAllByClass(component, className, [], 0, true);
+
+    if (result.length === 0) {
+      throw(`Could not find rendered element by class name: ${className}.`);
     } else {
-      index++;
-    }
-
-    if (Object.prototype.toString.call(component) === '[object Array]') {
-      return this.findByClass(component, className, index++);
-    } else {
-      return this.findByClass(component.props.children, className, 0);
+      return result[0];
     }
   }
 
@@ -120,6 +139,7 @@ module.exports = {
   return element.props.onChange({ target: { text: change }});
  },
 
+ findAllByClass: finders.findAllByClass,
  findByClass: finders.findByClass,
  findByTag: finders.findByTag,
  findById: finders.findById,
@@ -133,6 +153,7 @@ module.exports = {
  getTextById: (component, id) => {
    return getText(finders.findById(component, id));
  },
+
  getInnerChildren: function (component, index = 0) {
    if (component.props === undefined || component.props.children === undefined || index > component.props.children.length) {
      return undefined;
