@@ -25,6 +25,6 @@ export default class Component extends React.Component {
   }
 
   _handleClick(event) {
-    this.props.callMe();
+    this.props.callMe(event);
   }
 };

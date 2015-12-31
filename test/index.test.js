@@ -142,6 +142,26 @@ describe('ReactShallowDomHelpers', () => {
       ShallowDomHelpers.click(renderedComponent, '.click-me');
     });
 
+    it('allows devs to pass in the event payload', () => {
+      let event;
+      const onClick = (e) => { event = e; }
+      const renderedComponent = ShallowDomHelpers.render(<Component callMe={onClick} />);
+
+      ShallowDomHelpers.click(renderedComponent, '.click-me', { target: { className: 'click-me'} });
+
+      expect(event.target.className).to.equal('click-me');
+    });
+
+    it('passes an empty event payload when not explicitly passed in', () => {
+      let event;
+      const onClick = (e) => { event = e; }
+      const renderedComponent = ShallowDomHelpers.render(<Component callMe={onClick} />);
+
+      ShallowDomHelpers.click(renderedComponent, '.click-me');
+
+      expect(Object.prototype.toString.call(event)).to.equal('[object Object]');
+    });
+
     it('onChange', (done) => {
       const onChange = () => { done(); }
       const renderedComponent = ShallowDomHelpers.render(<Component onChange={onChange} />);

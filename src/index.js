@@ -161,9 +161,9 @@ module.exports = {
    return shallowRenderer.getRenderOutput();
  },
 
- click: (component, selector) => {
+ click: (component, selector, event = {}) => {
    const element = callFinderBasedOnSelector(finders, component, selector);
-   return element.props.onClick({ target: { }});
+   return element.props.onClick(event);
  },
 
  change: (component, selector, change) => {
