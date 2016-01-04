@@ -166,9 +166,9 @@ module.exports = {
    return element.props.onClick(event);
  },
 
- change: (component, selector, change) => {
+ change: (component, selector, event = {}) => {
   const element = callFinderBasedOnSelector(finders, component, selector);
-  return element.props.onChange({ target: { text: change }});
+  return element.props.onChange(event);
  },
 
  findAllByClass: (component, className) => {

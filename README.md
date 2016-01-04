@@ -132,6 +132,5 @@ react-shallowdom-helpers
 ```
 
 ### TODO
-  * Simulate event payload when an event is trigger. (i.e Synthetic event)
   * Add more matchers
   * Refactor, refactor, refactor

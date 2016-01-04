@@ -135,38 +135,51 @@ describe('ReactShallowDomHelpers', () => {
   });
 
   describe('Events', () => {
-    it('onClick', (done) => {
-      const onClick = () => { done(); }
-      const renderedComponent = ShallowDomHelpers.render(<Component callMe={onClick} />);
+    describe('onClick', () => {
 
-      ShallowDomHelpers.click(renderedComponent, '.click-me');
+      it('allows devs to pass in the event payload', () => {
+        let event;
+        const onClick = (e) => { event = e; }
+        const renderedComponent = ShallowDomHelpers.render(<Component callMe={onClick} />);
+
+        ShallowDomHelpers.click(renderedComponent, '.click-me', { target: { className: 'click-me'} });
+
+        expect(event.target.className).to.equal('click-me');
+      });
+
+      it('passes an empty event payload when not explicitly passed in', () => {
+        let event;
+        const onClick = (e) => { event = e; }
+        const renderedComponent = ShallowDomHelpers.render(<Component callMe={onClick} />);
+
+        ShallowDomHelpers.click(renderedComponent, '.click-me');
+
+        expect(Object.prototype.toString.call(event)).to.equal('[object Object]');
+      });
     });
 
-    it('allows devs to pass in the event payload', () => {
-      let event;
-      const onClick = (e) => { event = e; }
-      const renderedComponent = ShallowDomHelpers.render(<Component callMe={onClick} />);
+    describe('onChange', () => {
 
-      ShallowDomHelpers.click(renderedComponent, '.click-me', { target: { className: 'click-me'} });
+      it('allows devs to pass in the event payload', () => {
+        let event;
+        const onChange = (e) => { event = e; }
+        const renderedComponent = ShallowDomHelpers.render(<Component onChange={onChange} />);
 
-      expect(event.target.className).to.equal('click-me');
-    });
 
-    it('passes an empty event payload when not explicitly passed in', () => {
-      let event;
-      const onClick = (e) => { event = e; }
-      const renderedComponent = ShallowDomHelpers.render(<Component callMe={onClick} />);
+        ShallowDomHelpers.change(renderedComponent, 'input', { target: { text: "1234" }});
 
-      ShallowDomHelpers.click(renderedComponent, '.click-me');
+        expect(event.target.text).to.equal('1234');
+      });
 
-      expect(Object.prototype.toString.call(event)).to.equal('[object Object]');
-    });
+      it('passes an empty event payload when not explicitly passed in', () => {
+        let emptyEvent;
+        const onChange = (e) => { emptyEvent = e; }
+        const renderedComponent = ShallowDomHelpers.render(<Component onChange={onChange} />);
 
-    it('onChange', (done) => {
-      const onChange = () => { done(); }
-      const renderedComponent = ShallowDomHelpers.render(<Component onChange={onChange} />);
+        ShallowDomHelpers.change(renderedComponent, 'input');
 
-      ShallowDomHelpers.change(renderedComponent, 'input', '1234');
+        expect(Object.prototype.toString.call(emptyEvent)).to.equal('[object Object]');
+      });
     });
   });
 
