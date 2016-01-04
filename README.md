@@ -72,7 +72,7 @@ react-shallowdom-helpers
   expect(text).to.eq('Text here');
 ```
 
-#### getTextByClass(renderedComponent, 'class-name-here');
+#### getTextByClass
 ```js
   const text = ShallowDOMHelpers.getTextByClass(renderedComponent, 'class-name-here');
   expect(text).to.eq('Text here');
@@ -94,25 +94,25 @@ react-shallowdom-helpers
 #### click
 ```js
   // by class name
-  ShallowDOMHelpers.click(renderedComponent, '.className');
+  ShallowDOMHelpers.click(renderedComponent, '.className', { target: { className: 'className' } });
 
   // by id
   ShallowDOMHelpers.click(renderedComponent, '#id');
 
   // by tag
-  ShallowDOMHelpers.click(renderedComponent, 'p');
+  ShallowDOMHelpers.click(renderedComponent, 'p', { target: { tagName: 'p' } });
 ```
 
 #### change
 ```js
   // by class name
-  ShallowDOMHelpers.change(renderedComponent, '.className', '123');
+  ShallowDOMHelpers.change(renderedComponent, '.className', { target: { text: '1234'} });
 
   // by id
-  ShallowDOMHelpers.change(renderedComponent, '#id', '123');
+  ShallowDOMHelpers.change(renderedComponent, '#id', '123', { target: { text: '1234' } });
 
   // by tag
-  ShallowDOMHelpers.change(renderedComponent, 'p', '123');
+  ShallowDOMHelpers.change(renderedComponent, 'p', '123', { target: { text: '1234' } });
 ```
 
 #### TestUtils
