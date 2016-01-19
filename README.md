@@ -66,6 +66,11 @@ react-shallowdom-helpers
   const innerChildren = ShallowDOMHelpers.getInnerChildren(renderedComponent);
   // Inner Children
 ```
+#### getText
+```js
+  const text = ShallowDOMHelpers.getText(renderedComponent);
+  expect(text).to.eq('Text here');
+```
 
 #### getTextByClass(renderedComponent, 'class-name-here');
 ```js
