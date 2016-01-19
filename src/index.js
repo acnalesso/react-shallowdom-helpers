@@ -197,7 +197,8 @@ module.exports = {
  },
  getTextById: (component, id) => {
    return getText(finders.findById(component, id));
- },
+
+getText: getText,
 
  getInnerChildren: function (component, index = 0) {
    if (component.props === undefined || component.props.children === undefined || index > component.props.children.length) {
